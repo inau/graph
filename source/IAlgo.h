@@ -8,6 +8,7 @@
 #include "IGraph.h"
 #include "IAlgo.h"
 #include <vector>
+#include <set>
 
 namespace Graph {
     namespace Algs {
@@ -24,6 +25,7 @@ namespace Graph {
         public:
             MinimumSpanningTree(IGraph1<Key, Value> *graph) {
                 std::vector< IEdge1<Key, Value>* > sorted;
+                //std::set<Key> connected;
                 // read from graph
                 sorted.resize(graph->GetSizeE());
                 auto res = graph->GetEdges(sorted.data(), sorted.size());
@@ -32,21 +34,49 @@ namespace Graph {
                     int gg = 42;
                     return;
                 }
-                std::sort(sorted.begin(),sorted.end());
+                std::sort(sorted.begin(),
+                          sorted.end(),
+                          [](IEdge1<Key, Value>* lhs, IEdge1<Key, Value>* rhs)
+                          {
+                              bool res = false;
+                              if(lhs && rhs)
+                              {
+                                  res = lhs->GetVal() < rhs->GetVal();
+                              }
+                              return res;
+                          }
+                );
 
                 Graph::Algs::UnionFind<Key> uf;
                 IEdge1<Key, Value> *e = nullptr;
-                for (auto i = 0u; i < sorted.size(); i++) {
+                for (auto i = 0u; i < sorted.size(); i++)
+                {
+                    bool added = false;
                     e = sorted[i];
 
-                    Key p0(uf.Find(e->GetFrom()));
-                    Key p1(uf.Find(e->GetTo()));
+                    Key p0 = uf.Find(e->GetFrom());
+                    Key p1 = uf.Find(e->GetTo());
 
-                    if (p0 != p1) {
-                        uf.Union(e->GetFrom(), e->GetTo());
-                        mst.push_back(e);
+                    if( p0 != p1 )
+                    {
+                        /*
+                        if( connected.count(e->GetFrom()) == 0 )
+                        {
+                            connected.insert(e->GetFrom());
+                            added = true;
+                        }
+                        if ( connected.count(e->GetTo()) == 0 )
+                        {
+                            connected.insert(e->GetTo());
+                            added = true;
+                        }
+*/
+                       // if(added)
+                       // {
+                            mst.push_back(e);
+                            uf.Union(e->GetFrom(), e->GetTo());
+                       // }
                     }
-
                     if (mst.size() >= graph->GetSizeV()) break;
                 }
             }
@@ -57,7 +87,6 @@ namespace Graph {
         Tmpl_K
         class UnionFind {
         protected:
-            int next_idx = 0;
             struct UFInfo {
                 int Rank = 1;
                 Key Parent;
@@ -72,7 +101,7 @@ namespace Graph {
                 Key k = v;
                 while (!IsRoot(k)) { k = vertices[k].Parent; }
                 //compress
-                vertices[v].Parent = k;
+                //vertices[v].Parent = k;
 
                 return k;
             }

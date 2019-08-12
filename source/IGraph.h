@@ -47,39 +47,5 @@ namespace Graph
 
     };
 
-
-
-template<class Identifier, class Item>
-class IVertex;
-
-template<class Identifier, class Item>
-class IEdge
-{
-public:
-    ~IEdge() {};
-    virtual IVertex<Identifier,Item>& From() = 0;
-    virtual IVertex<Identifier,Item>& To() = 0;
-};
-
-template<class Identifier, class Item>
-class IVertex
-{
-public:
-    ~IVertex(){};
-    virtual const Identifier    GetId() = 0;
-    virtual Item&               GetItem() = 0;
-    virtual IVertex**            GetAdjacent(unsigned int& nResults) = 0;
-    virtual bool Connect(IVertex<Identifier, Item>* pOther) = 0;
-    virtual bool Disconnect(IVertex<Identifier, Item>* pOther) = 0;
-};
-
-template<class Identifier,class Item>
-class IGraph {
-public:
-    virtual bool                                    AddEdge     (IVertex<Identifier, Item>* pFrom, IVertex<Identifier, Item>* pTo) = 0;
-    virtual IVertex<Identifier, Item>*        GetVertex   (Identifier i) = 0;
-    virtual IVertex<Identifier, Item>*        AddVertex   (Identifier i) = 0;
-};
-
 }
 #endif //GRAPH_GRAPH_H

@@ -36,6 +36,19 @@ namespace Graph
         };
 
         Tmpl_V
+        class ConstGen : public IGen<Value>
+        {
+        protected:
+            Value val;
+        public:
+            ConstGen(Value v) : val(v) {};
+            Value Next()
+            {
+                return val;
+            };
+        };
+
+        Tmpl_V
         class Key2DGen : public IGen<Value>
         {
         protected:

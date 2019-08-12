@@ -24,14 +24,4 @@ namespace Graph
     };
 }
 
-template<class Identifier, class Item>
-class CEdge : IEdge<Identifier, Item> {
-protected:
-    IVertex<Identifier,Item> v1;
-    IVertex<Identifier,Item> v2;
-public:
-    IVertex<Identifier,Item>& From()    { return v1; };
-    IVertex<Identifier,Item>& To()      { return v2; };
-};
-
 #endif
